@@ -1,15 +1,15 @@
+# Ignorar carpetas y archivos innecesarios
 /target/
-
-.idea/
-.vscode/
-.settings
+/.idea/
+/.vscode/
+/.settings
 .project
 .classpath
-
 *.iml
 .DS_Store
 
-# The following files are generated/updated by vaadin-maven-plugin
+# Vaadin plugin
 node_modules/
 src/main/frontend/generated/
 vite.generated.ts
+
