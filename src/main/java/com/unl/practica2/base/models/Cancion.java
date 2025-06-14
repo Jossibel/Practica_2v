@@ -1,6 +1,6 @@
 package com.unl.practica2.base.models;
 
-public class Cancion {
+public class Cancion implements Comparable<Cancion> {
     private Integer id;
     private String nombre;
     private Integer id_genero;
@@ -64,5 +64,10 @@ public class Cancion {
     public void setId_album(Integer id_album) {
         this.id_album = id_album;
     }
-
+      @Override
+    public int compareTo(Cancion otra) {
+        // Comparar por el campo que usarás para búsqueda binaria
+        return this.nombre.compareToIgnoreCase(otra.nombre);
+    }
+      
 }

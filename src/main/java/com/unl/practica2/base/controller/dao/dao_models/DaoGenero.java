@@ -58,7 +58,7 @@ public class DaoGenero extends AdapterDao<Genero> {
         // Ejemplo de actualización
         dao.setObj(null);
         dao.getObj().setId(1); // ID a actualizar
-        dao.getObj().setNombre("Rock Clásico");
+        dao.getObj().setNombre("Opera");
         if (dao.update(0)) { // Posición en la lista
             System.out.println("Genero actualizado exitosamente");
         } else {

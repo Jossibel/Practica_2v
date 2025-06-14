@@ -1,20 +1,52 @@
 package com.unl.practica2.base.controller.DataStruct.list;
 
 import com.unl.practica2.base.controller.DataStruct.stack.Stack;
+import com.unl.practica2.base.controller.DataStruct.stack.StackImplementation;
 
 public class LinkedList<E> {
     private Node<E> head;
     private Node<E> last;
     private Integer length;
 
-    public Integer getLength() {
-        return this.length;
+    // Clase Node interna
+    private static class Node<T> {
+        private T data;
+        private Node<T> next;
+
+        public Node(T data) {
+            this(data, null);
+        }
+
+        public Node(T data, Node<T> next) {
+            this.data = data;
+            this.next = next;
+        }
+
+        public T getData() {
+            return data;
+        }
+
+        public void setData(T data) {
+            this.data = data;
+        }
+
+        public Node<T> getNext() {
+            return next;
+        }
+
+        public void setNext(Node<T> next) {
+            this.next = next;
+        }
     }
 
     public LinkedList() {
         head = null;
         last = null;
         length = 0;
+    }
+
+    public Integer getLength() {
+        return this.length;
     }
 
     public Boolean isEmpty() {
@@ -24,19 +56,15 @@ public class LinkedList<E> {
     private Node<E> getNode(Integer pos) {
         if (isEmpty()) {
             throw new ArrayIndexOutOfBoundsException("List empty");
-            // System.out.println("Lista vacia");
-            // return null;
         } else if (pos < 0 || pos >= length) {
-            // System.out.println("Fuera de rango");
-            // return null;
             throw new ArrayIndexOutOfBoundsException("Index out range");
         } else if (pos == 0) {
             return head;
-        } else if ((length.intValue() - 1) == pos.intValue()) {
+        } else if ((length - 1) == pos) {
             return last;
         } else {
             Node<E> search = head;
-            Integer cont = 0;
+            int cont = 0;
             while (cont < pos) {
                 cont++;
                 search = search.getNext();
@@ -45,41 +73,26 @@ public class LinkedList<E> {
         }
     }
 
-    private E getDataFirst() {
-        if (isEmpty()) {
-            throw new ArrayIndexOutOfBoundsException("List empty");
-        } else {
-            return head.getData();
-        }
-    }
-
-    private E getDataLast() {
-        if (isEmpty()) {
-            throw new ArrayIndexOutOfBoundsException("List empty");
-        } else {
-            return last.getData();
-        }
-    }
-
     public E get(Integer pos) {
         return getNode(pos).getData();
-        /*
-         * if (isEmpty()) {
-         * throw new ArrayIndexOutOfBoundsException("List empty");
-         * // System.out.println("Lista vacia");
-         * // return null;
-         * } else if (pos < 0 || pos >= length) {
-         * // System.out.println("Fuera de rango");
-         * // return null;
-         * throw new ArrayIndexOutOfBoundsException("Index out range");
-         * }else if (pos == 0) {
-         * return getDataFirst();
-         * } else if (length.intValue() == pos.intValue()) {
-         * return getDataLast();
-         * } else {
-         * return getNode(pos).getData();
-         * }
-         */
+    }
+
+    public void add(E data) {
+        addLast(data);
+    }
+
+    public void add(E data, Integer pos) {
+        if (pos == 0) {
+            addFirst(data);
+        } else if (length == pos) {
+            addLast(data);
+        } else {
+            Node<E> search_preview = getNode(pos - 1);
+            Node<E> search = getNode(pos);
+            Node<E> aux = new Node<>(data, search);
+            search_preview.setNext(aux);
+            length++;
+        }
     }
 
     private void addFirst(E data) {
@@ -104,45 +117,20 @@ public class LinkedList<E> {
             last = aux;
             length++;
         }
-
     }
 
-    public void add(E data, Integer pos) throws Exception {
-        if (pos == 0) {
-            addFirst(data);
-        } else if (length.intValue() == pos.intValue()) {
-            addLast(data);
-        } else {
-            Node<E> search_preview = getNode(pos - 1);
-            Node<E> search = getNode(pos);
-            Node<E> aux = new Node<>(data, search);
-            search_preview.setNext(aux);
-            length++;
+    public void addAll(LinkedList<E> otraLista) {
+        for (int i = 0; i < otraLista.getLength(); i++) {
+            this.add(otraLista.get(i));
         }
     }
 
-    public void add(E data) {
-        addLast(data);
-    }
-
-    public String print() {
-        if (isEmpty())
-            return "Esta vacia";
-        else {
-            StringBuilder resp = new StringBuilder();
-            Node<E> help = head;
-            while (help != null) {
-                // resp += help.getData()+" - ";
-                resp.append(help.getData()).append(" - ");
-                help = help.getNext();
-            }
-            resp.append("\n");
-            return resp.toString();
-        }
+    public void set(int index, E element) {
+        getNode(index).setData(element);
     }
 
     public void update(E data, Integer pos) {
-        getNode(pos).setData(data);
+        set(pos, data);
     }
 
     public void clear() {
@@ -152,91 +140,221 @@ public class LinkedList<E> {
     }
 
     public E[] toArray() {
-        Class clazz = null;
-        E[] matriz = null;
-        if (this.length > 0) {
-            clazz = head.getData().getClass();
-            matriz = (E[]) java.lang.reflect.Array.newInstance(clazz, this.length);
-            Node<E> aux = head;
-            for (int i = 0; i < length; i++) {
-                matriz[i] = aux.getData();
-                aux = aux.getNext();
-            }
+        if (length == 0) {
+            return null;
+        }
+        
+        @SuppressWarnings("unchecked")
+        E[] matriz = (E[]) java.lang.reflect.Array.newInstance(
+            head.getData().getClass(), length);
+        
+        Node<E> aux = head;
+        for (int i = 0; i < length; i++) {
+            matriz[i] = aux.getData();
+            aux = aux.getNext();
         }
         return matriz;
     }
 
     public LinkedList<E> toList(E[] matriz) {
         clear();
-        for (int i = 0; i < matriz.length; i++) {
-            this.add(matriz[i]);
+        for (E element : matriz) {
+            this.add(element);
         }
         return this;
     }
 
-    protected E deleteFirst() throws Exception {
-        if (isEmpty()) {
-            throw new Exception("List empty");
-        } else {
-            E element = head.getData();
-            Node<E> aux = head.getNext();
-            head = aux;
-            if (length.intValue() == 1)
-                last = null;
-            length--;
-            return element;
-        }
-    }
-
-    protected E deleteLast() throws Exception {
-        if (isEmpty()) {
-            throw new Exception("List empty");
-        } else {
-            E element = last.getData();
-            Node<E> aux = getNode(length - 2);
-            if (aux == null) {
-                last = null;
-                if (length == 2) {
-                    last = head;
-                } else {
-                    head = null;
-                }
-            } else {
-                last = null;
-                last = aux;
-                last.setNext(null);
-            }
-            length--;
-            return element;
-        }
-    }
-
-    public E delete(Integer pos) throws Exception {
+    public E deleteFirst() {
         if (isEmpty()) {
             throw new ArrayIndexOutOfBoundsException("List empty");
+        }
+        
+        E element = head.getData();
+        head = head.getNext();
+        if (length == 1) {
+            last = null;
+        }
+        length--;
+        return element;
+    }
 
+    public E deleteLast() {
+        if (isEmpty()) {
+            throw new ArrayIndexOutOfBoundsException("List empty");
+        }
+        
+        if (length == 1) {
+            return deleteFirst();
+        }
+        
+        Node<E> prev = getNode(length - 2);
+        E element = last.getData();
+        prev.setNext(null);
+        last = prev;
+        length--;
+        return element;
+    }
+
+    public E delete(Integer pos) {
+        if (isEmpty()) {
+            throw new ArrayIndexOutOfBoundsException("List empty");
         } else if (pos < 0 || pos >= length) {
             throw new ArrayIndexOutOfBoundsException("Index out range");
         } else if (pos == 0) {
             return deleteFirst();
-        } else if ((length.intValue() - 1) == pos.intValue()) {
+        } else if (pos == length - 1) {
             return deleteLast();
         } else {
-            Node<E> preview = getNode(pos - 1);
-            Node<E> actualy = getNode(pos);
-            E element = preview.getData();
-            Node<E> next = actualy.getNext();
-            actualy = null;
-            preview.setNext(next);
+            Node<E> prev = getNode(pos - 1);
+            Node<E> current = prev.getNext();
+            prev.setNext(current.getNext());
             length--;
-            return element;
+            return current.getData();
         }
     }
 
-    public static void main(String[] args) {
-        // StackImplementation<Integer> si = new StackImplementation<>(5);
-        Stack<Integer> stack = new Stack<>(5);
-
+    // Métodos para ordenamiento
+    public void quickSort() {
+        if (length > 1) {
+            quickSort(0, length - 1);
+        }
     }
 
+    private void quickSort(int low, int high) {
+        if (low < high) {
+            int pi = partition(low, high);
+            quickSort(low, pi - 1);
+            quickSort(pi + 1, high);
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    private int partition(int low, int high) {
+        E pivot = get(high);
+        int i = low - 1;
+        
+        for (int j = low; j < high; j++) {
+            if (((Comparable<E>) get(j)).compareTo(pivot) <= 0) {
+                i++;
+                swap(i, j);
+            }
+        }
+        swap(i + 1, high);
+        return i + 1;
+    }
+
+    public void shellSort() {
+        int n = length;
+        // Secuencia de gaps optimizada
+        for (int gap = n/2; gap > 0; gap /= 2) {
+            for (int i = gap; i < n; i++) {
+                E temp = get(i);
+                int j;
+                for (j = i; j >= gap && ((Comparable<E>) get(j - gap)).compareTo(temp) > 0; j -= gap) {
+                    set(j, get(j - gap));
+                }
+                set(j, temp);
+            }
+        }
+    }
+
+    private void swap(int i, int j) {
+        E temp = get(i);
+        set(i, get(j));
+        set(j, temp);
+    }
+
+    // Métodos adicionales para búsqueda
+    @SuppressWarnings("unchecked")
+    public LinkedList<E> busquedaLineal(String criterio, String valor) {
+        LinkedList<E> resultados = new LinkedList<>();
+        for (int i = 0; i < length; i++) {
+            E elemento = get(i);
+            try {
+                java.lang.reflect.Field campo = elemento.getClass().getDeclaredField(criterio);
+                campo.setAccessible(true);
+                Object valorCampo = campo.get(elemento);
+                
+                if (valorCampo.toString().equalsIgnoreCase(valor)) {
+                    resultados.add(elemento);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return resultados;
+    }
+
+    @SuppressWarnings("unchecked")
+    public LinkedList<E> busquedaBinaria(String criterio, String valor) {
+        LinkedList<E> resultados = new LinkedList<>();
+        int left = 0, right = length - 1;
+        
+        try {
+            while (left <= right) {
+                int mid = left + (right - left) / 2;
+                E elemento = get(mid);
+                
+                java.lang.reflect.Field campo = elemento.getClass().getDeclaredField(criterio);
+                campo.setAccessible(true);
+                Object valorCampo = campo.get(elemento);
+                
+                int cmp = valorCampo.toString().compareToIgnoreCase(valor);
+                
+                if (cmp == 0) {
+                    resultados.add(elemento);
+                    // Buscar duplicados
+                    int temp = mid - 1;
+                    while (temp >= 0) {
+                        E elemTemp = get(temp);
+                        campo = elemTemp.getClass().getDeclaredField(criterio);
+                        campo.setAccessible(true);
+                        if (campo.get(elemTemp).toString().equalsIgnoreCase(valor)) {
+                            resultados.add(elemTemp);
+                            temp--;
+                        } else {
+                            break;
+                        }
+                    }
+                    temp = mid + 1;
+                    while (temp < length) {
+                        E elemTemp = get(temp);
+                        campo = elemTemp.getClass().getDeclaredField(criterio);
+                        campo.setAccessible(true);
+                        if (campo.get(elemTemp).toString().equalsIgnoreCase(valor)) {
+                            resultados.add(elemTemp);
+                            temp++;
+                        } else {
+                            break;
+                        }
+                    }
+                    return resultados;
+                } else if (cmp < 0) {
+                    left = mid + 1;
+                } else {
+                    right = mid - 1;
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return resultados;
+    }
+
+    @Override
+    public String toString() {
+        if (isEmpty()) return "[]";
+        
+        StringBuilder sb = new StringBuilder("[");
+        Node<E> current = head;
+        while (current != null) {
+            sb.append(current.getData());
+            if (current.getNext() != null) {
+                sb.append(", ");
+            }
+            current = current.getNext();
+        }
+        sb.append("]");
+        return sb.toString();
+    }
 }

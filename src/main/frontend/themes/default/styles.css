@@ -1,0 +1,44 @@
+/* Fondo del menú lateral */
+vaadin-drawer-layout::part(nav) {
+  background-color: #B39DDB; /* Morado claro */
+  color: white;
+}
+
+/* Texto del menú lateral */
+vaadin-tab {
+  color: white;
+  font-weight: bold;
+}
+
+vaadin-tab[selected] {
+  background-color: #9575CD; /* Morado más definido */
+  color: #ffffff;
+}
+
+/* Fondo del contenedor principal */
+.main-view {
+  background-color: #f8f6fc;
+}
+
+/* Tabla de canciones */
+vaadin-grid::part(content-cell) {
+  background-color: #ffffff;
+  color: #4a148c; /* Texto morado oscuro */
+}
+
+vaadin-grid::part(header-cell) {
+  background-color: #9575CD;
+  color: white;
+  font-weight: bold;
+}
+
+/* Botón "Agregar Canción" */
+vaadin-button[theme~="primary"] {
+  background-color: #9575CD;
+  color: white;
+  font-weight: bold;
+}
+
+vaadin-button[theme~="primary"]:hover {
+  background-color: #7E57C2;
+}

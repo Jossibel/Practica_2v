@@ -1,13 +1,17 @@
 package com.unl.practica2.base.controller.dao.dao_models;
 
-import com.unl.practica2.base.controller.dao.AdapterDao;
 import com.unl.practica2.base.models.Album;
+
+import java.util.Date;
+
+import com.unl.practica2.base.controller.dao.AdapterDao;
 
 public class DaoAlbum extends AdapterDao<Album> {
     private Album obj;
 
     public DaoAlbum() {
         super(Album.class);
+        // TODO Auto-generated constructor stub
     }
 
     public Album getObj() {
@@ -22,14 +26,13 @@ public class DaoAlbum extends AdapterDao<Album> {
 
     public Boolean save() {
         try {
-            if (obj.getId() == null) {
-                obj.setId(this.listAll().getLength() + 1);
-            }
+            obj.setId(listAll().getLength()+1);
             this.persist(obj);
             return true;
         } catch (Exception e) {
-            System.err.println("Error al guardar álbum: " + e.getMessage());
+            //TODO
             return false;
+            // TODO: handle exception
         }
     }
 
@@ -38,69 +41,27 @@ public class DaoAlbum extends AdapterDao<Album> {
             this.update(obj, pos);
             return true;
         } catch (Exception e) {
-            System.err.println("Error al actualizar álbum: " + e.getMessage());
+            //TODO
             return false;
+            // TODO: handle exception
         }
-    }
-
-    public Album findById(int id) {
-        try {
-            for (int i = 0; i < this.listAll().getLength(); i++) {
-                Album a = this.listAll().get(i);
-                if (a.getId() == id) {
-                    return a;
-                }
-            }
-        } catch (Exception e) {
-            System.err.println("Error al buscar álbum por ID: " + e.getMessage());
-        }
-        return null;
-    }
-
-    public Album findByNombre(String nombre) {
-        try {
-            for (int i = 0; i < this.listAll().getLength(); i++) {
-                Album a = this.listAll().get(i);
-                if (a.getNombre().equalsIgnoreCase(nombre)) {
-                    return a;
-                }
-            }
-        } catch (Exception e) {
-            System.err.println("Error al buscar álbum por nombre: " + e.getMessage());
-        }
-        return null;
-    }
-
-    public boolean delete(int id) {
-        try {
-            for (int i = 0; i < this.listAll().getLength(); i++) {
-                if (this.listAll().get(i).getId() == id) {
-                    this.delete(i);
-                    return true;
-                }
-            }
-        } catch (Exception e) {
-            System.err.println("Error al eliminar álbum: " + e.getMessage());
-        }
-        return false;
-    }
-
-    // Nuevo método para obtener todos los álbumes como array
-    public Album[] getAllAlbums() {
-        return this.listAll().toArray();
     }
 
     public static void main(String[] args) {
         DaoAlbum da = new DaoAlbum();
-        da.getObj().setId(da.listAll().getLength() + 1);
-        da.getObj().setNombre("limon");
+        
+        da.getObj().setNombre("Queens");
+        da.getObj().setId_banda(1);
+        da.getObj().setFecha(new java.sql.Date(new Date().getTime()));
+        
         if (da.save())
             System.out.println("GUARDADO");
         else
             System.out.println("Hubo un error");
         da.setObj(null);
-        da.getObj().setId(da.listAll().getLength() + 1);
-        da.getObj().setNombre("lulo");
+        da.getObj().setNombre("El loco de tercero");
+        da.getObj().setId_banda(3);
+        da.getObj().setFecha(new java.sql.Date(new Date().getTime()));
         if (da.save())
             System.out.println("GUARDADO");
         else

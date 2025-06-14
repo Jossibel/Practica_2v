@@ -1,1 +1,29 @@
-[{"id":1,"nombre":"Rata Blanca ","id_genero":1,"duracion":55,"url":"https://www.google.com/search?q\u003djmap\u0026ie\u003dUTF-8","tipo":"FISICO","id_album":1},{"id":2,"nombre":"bhh","id_genero":2,"duracion":178,"url":"ihriogw","tipo":"FISICO","id_album":1}]
+[
+    {
+        "id": 1,
+        "nombre": "comilla",
+        "id_genero": 1,
+        "duracion": 952,
+        "url": "htt:pss/cancion/cancion",
+        "tipo": "VIRTUAL",
+        "id_album": 4
+    },
+    {
+        "id": 2,
+        "nombre": "anahiperez",
+        "id_genero": 2,
+        "duracion": 952,
+        "url": "xrrhg",
+        "tipo": "FISICO",
+        "id_album": 1
+    },
+    {
+        "id": 3,
+        "nombre": "gata",
+        "id_genero": 1,
+        "duracion": 542,
+        "url": "tyx",
+        "tipo": "VIRTUAL",
+        "id_album": 1
+    }
+]
